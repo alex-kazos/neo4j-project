@@ -1,0 +1,20 @@
+# Ignore data files and exported PDFs
+# Data files
+/data/
+/FootBallData.csv
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.json
+*.parquet
+
+# PDFs
+*.pdf
+
+# Common editor / OS cruft
+*.DS_Store
+__pycache__/
+.venv/
+env/
+node_modules/

@@ -1,0 +1,48 @@
+erDiagram
+    Country ||--o{ Competition : "IN_COUNTRY"
+    Competition ||--o{ Game : "PART_OF"
+    Game ||--|| Team : "HOME_TEAM"
+    Game ||--|| Team : "AWAY_TEAM"
+    Player ||--o{ Game : "PLAYED_IN"
+    Player ||--o{ Player : "TEAMMATES"
+
+    Country {
+        string name PK
+    }
+
+    Competition {
+        string name PK
+    }
+
+    Game {
+        integer gameId PK
+        date gameDate
+        integer homeGoals
+        integer awayGoals
+        integer winner
+    }
+
+    Team {
+        string name PK
+    }
+
+    Player {
+        integer playerId PK
+        string name
+        string position
+        date birthDate
+    }
+
+    PLAYED_IN {
+        string teamName
+        integer minutesPlayed
+        integer goals
+        integer assists
+        integer yellowCards
+        integer redCards
+    }
+
+    TEAMMATES {
+        integer gamesTogether
+    }
+
