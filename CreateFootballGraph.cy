@@ -34,8 +34,6 @@ CREATE INDEX player_name_index IF NOT EXISTS FOR (p:Player) ON (p.name);
 
 // Note: Adjust the file path as needed:
 // - For Neo4j import directory: 'file:///FootBallData.csv'
-// - For absolute Windows path: 'file:///C:/dev/aueb/neo4j-project/FootBallData.csv'
-// - For absolute Unix path: 'file:///home/user/data/FootBallData.csv'
 
 // 2.1: Create unique Country nodes
 CALL () {
@@ -43,7 +41,8 @@ LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
 WITH DISTINCT row.Country AS countryName
 WHERE countryName IS NOT NULL AND countryName <> ''
-MERGE (co:Country {name: countryName}) }
+MERGE (co:Country {name: countryName})
+ }
 IN TRANSACTIONS OF 1000 ROWS;
 
 // 2.2: Create unique Competition nodes and link to Country
@@ -56,33 +55,20 @@ WHERE compName IS NOT NULL AND compName <> ''
 MERGE (c:Competition {name: compName})
 WITH c, countryName
 MATCH (co:Country {name: countryName})
-MERGE (c)-[:IN_COUNTRY]->(co)}
+MERGE (c)-[:IN_COUNTRY]->(co)
+}
 IN TRANSACTIONS OF 1000 ROWS;
 
 // 2.3: Create unique Team nodes (from all team name columns)
 CALL () {
 LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
-WITH DISTINCT row.HomeTeamName AS teamName
-WHERE teamName IS NOT NULL AND teamName <> ''
-MERGE (t:Team {name: teamName}) }
-IN TRANSACTIONS OF 1000 ROWS;
-
-CALL () {
-LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
-FIELDTERMINATOR ';'
-WITH DISTINCT row.AwayTeamName AS teamName
-WHERE teamName IS NOT NULL AND teamName <> ''
-MERGE (t:Team {name: teamName})}
-IN TRANSACTIONS OF 1000 ROWS;
-
-CALL () {
-LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
-FIELDTERMINATOR ';'
 WITH DISTINCT row.PlayerTeamName AS teamName
 WHERE teamName IS NOT NULL AND teamName <> ''
-MERGE (t:Team {name: teamName})}
+MERGE (t:Team {name: teamName}) 
+}
 IN TRANSACTIONS OF 1000 ROWS;
+
 
 // 2.4: Create unique Player nodes
 CALL () {
@@ -102,7 +88,7 @@ CALL () {
   MERGE (p:Player {
     playerId: playerId,
     name: playerName,
-    position: COALESCE(position, 'Unknown'),
+    position: position,
     birthDate: birthDate
   })
 } IN TRANSACTIONS OF 10000 ROWS;
@@ -119,9 +105,9 @@ CALL () {
   WITH DISTINCT
     toInteger(row.GameID) AS gameId,
     date(row.GameDate) AS gameDate,
-    toInteger(COALESCE(row.HomeGoals, '0')) AS homeGoals,
-    toInteger(COALESCE(row.AwayGoals, '0')) AS awayGoals,
-    toInteger(COALESCE(row.Winner, '0')) AS winner
+    toInteger(row.HomeGoals,) AS homeGoals,
+    toInteger(row.AwayGoals) AS awayGoals,
+    toInteger(Winner) AS winner
 
   MERGE (g:Game {gameId: gameId})
   SET
@@ -132,7 +118,7 @@ CALL () {
 } IN TRANSACTIONS OF 10000 ROWS;
 
 
-// 2.6: Create relationships: Game -> Team (HOME_TEAM and AWAY_TEAM)
+// 2.6: Create relationships: Game -> Team (HOME_TEAM and AWAY_TEAM) --
 cALL () {
   LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
@@ -147,10 +133,11 @@ MATCH (g:Game {gameId: gameId})
 MATCH (ht:Team {name: homeTeamName})
 MATCH (at:Team {name: awayTeamName})
 MERGE (g)-[:HOME_TEAM]->(ht)
-MERGE (g)-[:AWAY_TEAM]->(at) }
+MERGE (g)-[:AWAY_TEAM]->(at) 
+}
 IN TRANSACTIONS OF 10000 ROWS;
 
-// 2.7: Create relationship: Game -> Competition (PART_OF)
+// 2.7: Create relationship: Game -> Competition (PART_OF) --
 CALL () {
 LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
@@ -161,7 +148,8 @@ WHERE gameId IS NOT NULL
   AND compName IS NOT NULL AND compName <> ''
 MATCH (g:Game {gameId: gameId})
 MATCH (c:Competition {name: compName})
-MERGE (g)-[:PART_OF]->(c)}
+MERGE (g)-[:PART_OF]->(c)
+}
 IN TRANSACTIONS OF 10000 ROWS;
 
 // ============================================================================
@@ -192,7 +180,8 @@ MERGE (p)-[pi:PLAYED_IN {
     assists: assists,
     yellowCards: yellowCards,
     redCards: redCards
-}]->(g) }
+}]->(g) 
+}
 IN TRANSACTIONS OF 10000 ROWS;
 
 // ============================================================================
