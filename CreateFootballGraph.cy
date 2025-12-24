@@ -1,20 +1,6 @@
-// ============================================================================
-// CreateFootballGraph.cy
-// Neo4j Cypher Script for Creating Football Data Graph Database
-// ============================================================================
-// This script creates the complete graph database schema for football match data
-// Based on Project2_Part_Time.pdf requirements
-// ============================================================================
 
 // STEP 1: Create Constraints and Indexes
 // ============================================================================
-
-// Drop existing constraints if they exist (for re-running the script)
-DROP CONSTRAINT game_id_unique IF EXISTS;
-DROP CONSTRAINT player_id_unique IF EXISTS;
-DROP CONSTRAINT team_name_unique IF EXISTS;
-DROP CONSTRAINT competition_name_unique IF EXISTS;
-DROP CONSTRAINT country_name_unique IF EXISTS;
 
 // Create unique constraints (ensures data integrity)
 CREATE CONSTRAINT game_id_unique FOR (g:Game) REQUIRE g.gameId IS UNIQUE;
