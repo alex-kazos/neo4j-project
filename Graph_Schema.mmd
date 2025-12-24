@@ -1,48 +1,20 @@
-erDiagram
-    Country ||--o{ Competition : "IN_COUNTRY"
-    Competition ||--o{ Game : "PART_OF"
-    Game ||--|| Team : "HOME_TEAM"
-    Game ||--|| Team : "AWAY_TEAM"
-    Player ||--o{ Game : "PLAYED_IN"
-    Player ||--o{ Player : "TEAMMATES"
+flowchart TB
+ subgraph subGraph0["Football Data Graph Schema"]
+        Country(("<b>Country</b><br>name: string"))
+        Competition(("<b>Competition</b><br>name: string"))
+        Game(("<b>Game</b><br>gameId: integer<br>gameDate: date<br>homeGoals: integer<br>awayGoals: integer<br>winner: integer"))
+        Team(("<b>Team</b><br>name: string"))
+        Player(("<b>Player</b><br>playerId: integer<br>name: string<br>position: string<br>birthDate: date"))
+  end
+    Country -. <b>IN_COUNTRY</b> .-> Competition
+    Competition -. <b>PART_OF</b> .-> Game
+    Game -. <b>HOME_TEAM</b> .-> Team
+    Game -. <b>AWAY_TEAM</b> .-> Team
+    Player -. <b>PLAYED_IN</b><br>teamName, minutesPlayed<br>goals, assists<br>yellowCards, redCards .-> Game
+    Player -. <b>TEAMMATES</b><br>gamesTogether .-> Player
 
-    Country {
-        string name PK
-    }
-
-    Competition {
-        string name PK
-    }
-
-    Game {
-        integer gameId PK
-        date gameDate
-        integer homeGoals
-        integer awayGoals
-        integer winner
-    }
-
-    Team {
-        string name PK
-    }
-
-    Player {
-        integer playerId PK
-        string name
-        string position
-        date birthDate
-    }
-
-    PLAYED_IN {
-        string teamName
-        integer minutesPlayed
-        integer goals
-        integer assists
-        integer yellowCards
-        integer redCards
-    }
-
-    TEAMMATES {
-        integer gamesTogether
-    }
-
+    style Country fill:#e58b42
+    style Competition fill:#8aedb8
+    style Game fill:#e8d5f7
+    style Team fill:#ffe000
+    style Player fill:#f8bcbe
