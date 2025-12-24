@@ -93,7 +93,7 @@ SET
   g.winner = winner;
 
 
-// 2.6: Create relationships: Game -> Team (HOME_TEAM and AWAY_TEAM) --
+// 2.6: Create relationships: HOME_TEAM and AWAY_TEAM
 LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
 WITH DISTINCT 
@@ -110,7 +110,7 @@ MERGE (g)-[:HOME_TEAM]->(ht)
 MERGE (g)-[:AWAY_TEAM]->(at);
 
 
-// 2.7: Create relationship: Game -> Competition (PART_OF) --
+// 2.7: Create relationship: PART_OF
 LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
 FIELDTERMINATOR ';'
 WITH DISTINCT 
@@ -125,7 +125,7 @@ MERGE (g)-[:PART_OF]->(c);
 
 
 // ============================================================================
-// STEP 3: Create PLAYED_IN Relationships (Player -> Game with performance data)
+// STEP 3: Create relationship: PLAYED_IN 
 // ============================================================================
 
 LOAD CSV WITH HEADERS FROM 'file:///FootBallData.csv' AS row
@@ -156,11 +156,10 @@ MERGE (p)-[pi:PLAYED_IN {
 
 
 // ============================================================================
-// STEP 4: Create TEAMMATES Relationships (Player -> Player)
+// STEP 4: STEP 3: Create relationship: TEAMMATES
 // ============================================================================
 
-// For each game, find all players who played for the same team
-// and create TEAMMATES relationships with gamesTogether count
+// For each game, find all players who played for the same team and create TEAMMATES relationships with gamesTogether count
 MATCH (g:Game)
 MATCH (p1:Player)-[pi1:PLAYED_IN]->(g)
 MATCH (p2:Player)-[pi2:PLAYED_IN]->(g)
