@@ -81,7 +81,7 @@ WHERE row.GameID IS NOT NULL
 WITH DISTINCT
   toInteger(row.GameID) AS gameId,
   date(row.GameDate) AS gameDate,
-  toInteger(row.HomeGoals,) AS homeGoals,
+  toInteger(row.HomeGoals) AS homeGoals,
   toInteger(row.AwayGoals) AS awayGoals,
   toInteger(Winner) AS winner
 
