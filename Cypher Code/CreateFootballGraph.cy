@@ -83,7 +83,7 @@ WITH DISTINCT
   date(row.GameDate) AS gameDate,
   toInteger(row.HomeGoals) AS homeGoals,
   toInteger(row.AwayGoals) AS awayGoals,
-  toInteger(Winner) AS winner
+  toInteger(row.Winner) AS winner
 
 MERGE (g:Game {gameId: gameId})
 SET
